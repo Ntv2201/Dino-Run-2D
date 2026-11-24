@@ -8,16 +8,19 @@ public class Player : MonoBehaviour
     private bool isGrounded;
 
     private Rigidbody2D rb;
+    private Animator animator;
 
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
         HandleJump();
+        HandleAnimation();
     }
 
     private void HandleJump()
@@ -27,6 +30,18 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForceY(jumpForce, ForceMode2D.Impulse);
+        }
+    }
+
+    private void HandleAnimation()
+    {
+        if (isGrounded)
+        {
+            animator.Play("player_run");
+        }
+        else
+        {
+            animator.Play("player_jump");
         }
     }
 
