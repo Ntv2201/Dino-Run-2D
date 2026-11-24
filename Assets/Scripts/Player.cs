@@ -11,6 +11,10 @@ public class Player : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     private bool isGrounded;
 
+    public AudioClip jumpSFX;
+    public AudioClip landSFX;
+    public AudioClip dieSFX;
+
     private Rigidbody2D rb;
     private Animator animator;
 
@@ -34,6 +38,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForceY(jumpForce, ForceMode2D.Impulse);
+            AudioManager.instance.PlaySFX(jumpSFX);
         }
     }
 
@@ -53,7 +58,12 @@ public class Player : MonoBehaviour
     {
         if(collision.gameObject.tag == "Damage")
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+            AudioManager.instance.PlaySFX(dieSFX);
+            Invoke("WaitForSceneLoad", dieSFX.length);
+        }
+        else
+        {
+            AudioManager.instance.PlaySFX(landSFX);
         }
     }
 
@@ -64,6 +74,11 @@ public class Player : MonoBehaviour
             score++;
             scoreText.text = score.ToString();
         }
+    }
+
+    private void WaitForSceneLoad()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
     }
 
 }
