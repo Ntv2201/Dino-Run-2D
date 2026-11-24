@@ -1,10 +1,14 @@
 using UnityEngine;
-
+using TMPro;
+using Unity.VisualScripting;
+using System;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float rayLength = 0.1f;
+    public int score = 0;
+    [SerializeField] private TextMeshProUGUI scoreText;
     private bool isGrounded;
 
     private Rigidbody2D rb;
@@ -42,6 +46,23 @@ public class Player : MonoBehaviour
         else
         {
             animator.Play("player_jump");
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Damage")
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Damage")
+        {
+            score++;
+            scoreText.text = score.ToString();
         }
     }
 
